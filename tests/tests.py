@@ -5,8 +5,7 @@ __copyright__ = 'Copyright ©️ 2017 New York University'
 __license__ = 'See LICENSE.txt'
 __version__ = '0.3'
 
-
-from nose.tools import assert_equal
+from nose.tools import assert_equal, assert_not_equal, raises
 from textnorm import normalize_space, normalize_unicode
 import unittest
 
@@ -95,3 +94,232 @@ class SpaceTests(unittest.TestCase):
             'urchin.\n\t\n')
         n = normalize_space(s, preserve=['\t', '\n', '\u00A0'])
         assert_equal(g, n)
+
+
+class UnicodeTests(unittest.TestCase):
+
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
+
+    def test_empty(self):
+        s = ''
+        n = normalize_space(s)
+        assert_equal(s, n)
+
+    def test_unity_roman(self):
+        s = 'Cats rule. Dogs drool.'
+        n = normalize_space(s)
+        assert_equal(s, n)
+
+    def test_unity_greek(self):
+        s = 'μέγα βιβλίον μέγα κακόν'
+        n = normalize_unicode(s)
+        assert_equal(s, n)
+
+    # Greek starting in NFC
+
+    def test_greek_nfc2nfc(self):
+        s = 'μ\u03adγα βιβλ\u03afον μ\u03adγα κακ\u03ccν'
+        n = normalize_unicode(s)
+        assert_equal(s, n)
+        n = normalize_unicode(s, target='NFC')
+        assert_equal(s, n)
+
+    def test_greek_nfc2nfd(self):
+        s = 'μ\u03adγα βιβλ\u03afον μ\u03adγα κακ\u03ccν'
+        n = normalize_unicode(s, target='NFD')
+        g = (
+            'μ\u03b5\u0301γα βιβλ\u03b9\u0301ον μ\u03b5\u0301γα '
+            'κακ\u03bf\u0301ν')
+        assert_equal(g, n)
+
+    def test_greek_nfc2nfkc(self):
+        s = 'μ\u03adγα βιβλ\u03afον μ\u03adγα κακ\u03ccν'
+        n = normalize_unicode(s, target='NFKC')
+        assert_equal(s, n)
+
+    def test_greek_nfc2nfkd(self):
+        s = 'μ\u03adγα βιβλ\u03afον μ\u03adγα κακ\u03ccν'
+        n = normalize_unicode(s, target='NFKD')
+        g = (
+            'μ\u03b5\u0301γα βιβλ\u03b9\u0301ον μ\u03b5\u0301γα '
+            'κακ\u03bf\u0301ν')
+        assert_equal(g, n)
+
+    # Greek starting in NFD
+
+    def test_greek_nfd2nfd(self):
+        s = (
+            'μ\u03b5\u0301γα βιβλ\u03b9\u0301ον μ\u03b5\u0301γα '
+            'κακ\u03bf\u0301ν')
+        n = normalize_unicode(s, target='NFD')
+        assert_equal(s, n)
+
+    def test_greek_nfd2nfc(self):
+        s = (
+            'μ\u03b5\u0301γα βιβλ\u03b9\u0301ον μ\u03b5\u0301γα '
+            'κακ\u03bf\u0301ν')
+        n = normalize_unicode(s, target='NFC')
+        g = 'μ\u03adγα βιβλ\u03afον μ\u03adγα κακ\u03ccν'
+        assert_equal(g, n)
+
+    def test_greek_nfd2nfkc(self):
+        s = (
+            'μ\u03b5\u0301γα βιβλ\u03b9\u0301ον μ\u03b5\u0301γα '
+            'κακ\u03bf\u0301ν')
+        n = normalize_unicode(s, target='NFKC')
+        g = 'μ\u03adγα βιβλ\u03afον μ\u03adγα κακ\u03ccν'
+        assert_equal(g, n)
+
+    def test_greek_nfd2nfkd(self):
+        s = (
+            'μ\u03b5\u0301γα βιβλ\u03b9\u0301ον μ\u03b5\u0301γα '
+            'κακ\u03bf\u0301ν')
+        n = normalize_unicode(s, target='NFKD')
+        assert_equal(s, n)
+
+    # Greek starting in NFKD
+
+    def test_greek_nfkd2nfkd(self):
+        s = (
+            'μ\u03b5\u0301γα βιβλ\u03b9\u0301ον μ\u03b5\u0301γα '
+            'κακ\u03bf\u0301ν')
+        n = normalize_unicode(s, target='NFKD')
+        assert_equal(s, n)
+
+    def test_greek_nfkd2nfc(self):
+        s = (
+            'μ\u03b5\u0301γα βιβλ\u03b9\u0301ον μ\u03b5\u0301γα '
+            'κακ\u03bf\u0301ν')
+        n = normalize_unicode(s, target='NFC')
+        g = 'μ\u03adγα βιβλ\u03afον μ\u03adγα κακ\u03ccν'
+        assert_equal(g, n)
+
+    def test_greek_nfkd2nfd(self):
+        s = (
+            'μ\u03b5\u0301γα βιβλ\u03b9\u0301ον μ\u03b5\u0301γα '
+            'κακ\u03bf\u0301ν')
+        n = normalize_unicode(s, target='NFD')
+        assert_equal(s, n)
+
+    def test_greek_nfkd2nfkc(self):
+        s = (
+            'μ\u03b5\u0301γα βιβλ\u03b9\u0301ον μ\u03b5\u0301γα '
+            'κακ\u03bf\u0301ν')
+        n = normalize_unicode(s, target='NFKC')
+        g = 'μ\u03adγα βιβλ\u03afον μ\u03adγα κακ\u03ccν'
+        assert_equal(g, n)
+
+    # Greek Extended compatibility forms
+
+    def test_greek_extended2nfc(self):
+        s = 'μ\u1f73γα βιβλ\u1f77ον μ\u1f73γα κακ\u1f79ν'
+        n = normalize_unicode(s, target='NFC')
+        g = 'μ\u03adγα βιβλ\u03afον μ\u03adγα κακ\u03ccν'
+        assert_equal(g, n)
+
+    def test_greek_extended2nfkc(self):
+        s = 'μ\u1f73γα βιβλ\u1f77ον μ\u1f73γα κακ\u1f79ν'
+        n = normalize_unicode(s, target='NFKC')
+        g = 'μ\u03adγα βιβλ\u03afον μ\u03adγα κακ\u03ccν'
+        assert_equal(g, n)
+
+    def test_greek_extended2nfd(self):
+        s = 'μ\u1f73γα βιβλ\u1f77ον μ\u1f73γα κακ\u1f79ν'
+        n = normalize_unicode(s, target='NFD')
+        g = (
+            'μ\u03b5\u0301γα βιβλ\u03b9\u0301ον μ\u03b5\u0301γα '
+            'κακ\u03bf\u0301ν')
+        assert_equal(g, n)
+
+    def test_greek_extended2nfkd(self):
+        s = 'μ\u1f73γα βιβλ\u1f77ον μ\u1f73γα κακ\u1f79ν'
+        n = normalize_unicode(s, target='NFKD')
+        g = (
+            'μ\u03b5\u0301γα βιβλ\u03b9\u0301ον μ\u03b5\u0301γα '
+            'κακ\u03bf\u0301ν')
+        assert_equal(g, n)
+
+    # Greek variant letterforms and compatibility check
+
+    def test_greek_lunate_sigma2nfc(self):
+        s = '\u03f9υρβαν\u03ae'
+        n = normalize_unicode(s, target='NFC')
+        assert_equal(s, n)
+
+    @raises(ValueError)
+    def test_greek_lunate_sigma2nfc_compatible(self):
+        s = '\u03f9υρβαν\u03ae'
+        normalize_unicode(s, target='NFC', check_compatible=True)
+
+    def test_greek_lunate_sigma2nfd(self):
+        s = '\u03f9υρβαν\u03ae'
+        n = normalize_unicode(s, target='NFD')
+        g = '\u03f9υρβαν\u03b7\u0301'
+        assert_equal(g, n)
+
+    @raises(ValueError)
+    def test_greek_lunate_sigma2nfd_compatible(self):
+        s = '\u03f9υρβαν\u03ae'
+        normalize_unicode(s, target='NFD', check_compatible=True)
+
+    def test_greek_lunate_sigma2nfkd(self):
+        s = '\u03f9υρβαν\u03ae'
+        n = normalize_unicode(s, target='NFKD')
+        g = '\u03a3υρβαν\u03b7\u0301'
+        assert_equal(g, n)
+
+    @raises(ValueError)
+    def test_greek_lunate_sigma2nfkd_compatible(self):
+        s = '\u03f9υρβαν\u03ae'
+        normalize_unicode(s, target='NFKD', check_compatible=True)
+
+    def test_greek_lunate_sigma2nfkc(self):
+        s = '\u03f9υρβαν\u03ae'
+        n = normalize_unicode(s, target='NFKC')
+        g = '\u03a3υρβαν\u03ae'
+        assert_equal(g, n)
+
+    @raises(ValueError)
+    def test_greek_lunate_sigma2nfkc_compatible(self):
+        s = '\u03f9υρβαν\u03ae'
+        normalize_unicode(s, target='NFKC', check_compatible=True)
+
+    # multiple combining diacritics
+
+    def test_combining_nfd2nfd(self):
+        s = '\u03b7\u0313\u0342\u0345'  # ᾖ in NFD
+        n = normalize_unicode(s, target='NFD')
+        assert_equal(s, n)
+
+    def test_combining_nfd2nfkd(self):
+        s = '\u03b7\u0313\u0342\u0345'  # ᾖ in NFD
+        n = normalize_unicode(s, target='NFKD')
+        assert_equal(s, n)
+
+    def test_combining_nfd2nfc(self):
+        s = '\u03b7\u0313\u0342\u0345'  # ᾖ in NFD
+        n = normalize_unicode(s, target='NFC')
+        g = '\u1f96'
+        assert_equal(g, n)
+
+    def test_combining_nfd2nfkc(self):
+        s = '\u03b7\u0313\u0342\u0345'  # ᾖ in NFD
+        n = normalize_unicode(s, target='NFKC')
+        g = '\u1f96'
+        assert_equal(g, n)
+
+    def test_combining_heretical2nfd(self):
+        s = '\u03b7\u0345\u0342\u0313'  # ᾖ in heretical combining order
+        n = normalize_unicode(s, target='NFD')
+        assert_not_equal(s, n)
+        g = '\u03b7\u0313\u0342\u0345'  # ᾖ in NFD
+        assert_equal(g, n)
+
+    @raises(ValueError)
+    def test_combining_heretical2nfd_compatible(self):
+        s = '\u03b7\u0345\u0342\u0313'  # ᾖ in heretical combining order
+        normalize_unicode(s, target='NFD', check_compatible=True)
