@@ -77,9 +77,8 @@ def normalize_unicode(v: str, target='NFC', check_compatible=False):
                 'Unicode normalization may have changed the string "{}" in '
                 'an undesireable way. The canonical composition form ({}: '
                 '"{}") does not match the compatibility composition form ('
-                '{}: "{}"). {} is being used.'
+                '{}: "{}").'
                 ''.format(
-                    v, target, canonical, compatibility_target, compatible,
-                    target))
+                    v, target, canonical, compatibility_target, compatible))
             raise ValueError(msg)
     return canonical
