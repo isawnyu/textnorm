@@ -7,21 +7,28 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 setup(
     name='textnorm',
-    version='0.1',
-    description='change me',
+    version='0.2',
+    description=(
+        'A simple package for normalizing whitespace and Unicode composition '
+        'forms in Python 3 strings'),
     long_description=long_description,
-    url='http://change.me',
-    author='Change Me',
-    author_email='change@me.org',
+    url='https://github.com/isawnyu/textnorm',
+    author='Tom Elliott',
+    author_email='tom.elliott@nyu.edu',
     license='LICENSE.txt',
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
-        'Development Status :: 1 - Planning',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
-        'Topic :: Change Me',
-        'License :: License :: OSI Approved :: GNU Affero General Public License v3'
+        'Topic :: Text Processing :: General',
+        'License :: License :: OSI Approved :: GNU Affero General Public '
+            'License v3',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3 :: Only'
     ],
-    keywords='"change me", "please change me',
+    keywords=(
+        '"text normalization", "whitespace normalization", '
+        '"unicode normalization"'),
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
