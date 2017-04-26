@@ -19,8 +19,6 @@ def normalize_space(v: str, preserve: list=[]):
     Keyword arguments:
 
      * v: the Unicode string to normalize
-     * convert_whitespace: treat all whitespace characters except newline as
-                           space
      * preserve: a list of Unicode character strings to preserve instead of
                  treating them as whitespace (see tests for examples)
 
@@ -64,7 +62,6 @@ def normalize_unicode(v: str, target='NFC', check_compatible=False):
     adding the optional compatibility check when appropriate.
     """
     normalized = unicodedata.normalize(target, v)
-    normalized = _sort_diacritics(normalized)
     if check_compatible:
         if target == 'NFC':
             compatibility_target = 'NFKC'
@@ -92,39 +89,3 @@ def normalize_unicode(v: str, target='NFC', check_compatible=False):
                     compatible.encode('ascii', 'namereplace')))
             raise ValueError(msg)
     return normalized
-
-
-def _sort_diacritics(v: str):
-    """Ensure combining diacritics are always ordered the same way.
-
-    It appears that unicodedata.normalize does not enforce a canonical
-    ordering of combining diacritics in NFD and NFKD when the string
-    being normalized contains combining diacritics in arbitrary order and
-    the 'Canonical Combining Class' of two or more of those diacritics has
-    the same value. This function sorts all combining diacriticals that
-    follow a character with combining class == 0 first according to their
-    combining classes and then according to their code point value. This
-    ensures a repeatable sequence, regardless of the arbitrary order in
-    which the combining diacritics in the input string occur.
-    """
-
-    def postfix(v: list):
-        if len(v) > 0:
-            return ''.join(
-                sorted(
-                    v,
-                    key=lambda x: (unicodedata.combining(x), ord(x))))
-        else:
-            return ''
-
-    result = ''
-    diacritics = []
-    for c in v:
-        if unicodedata.combining(c) == 0:
-            result += postfix(diacritics)  # diacritics for preceding character
-            diacritics = []
-            result += c  # now the current non-combining character
-        else:
-            diacritics.append(c)
-    result += postfix(diacritics)  # final diacritics
-    return result

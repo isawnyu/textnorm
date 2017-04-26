@@ -291,35 +291,20 @@ class UnicodeTests(unittest.TestCase):
     # multiple combining diacritics
 
     def test_combining_nfd2nfd(self):
-        s = '\u03b7\u0313\u0342\u0345'  # ᾖ in NFD
-        n = normalize_unicode(s, target='NFD')
-        assert_equal(s, n)
+        raise NotImplementedError
 
     def test_combining_nfd2nfkd(self):
-        s = '\u03b7\u0313\u0342\u0345'  # ᾖ in NFD
-        n = normalize_unicode(s, target='NFKD')
-        assert_equal(s, n)
+        raise NotImplementedError
 
     def test_combining_nfd2nfc(self):
-        s = '\u03b7\u0313\u0342\u0345'  # ᾖ in NFD
-        n = normalize_unicode(s, target='NFC')
-        g = '\u1f96'
-        assert_equal(g, n)
+        raise NotImplementedError
 
     def test_combining_nfd2nfkc(self):
-        s = '\u03b7\u0313\u0342\u0345'  # ᾖ in NFD
-        n = normalize_unicode(s, target='NFKC')
-        g = '\u1f96'
-        assert_equal(g, n)
+        raise NotImplementedError
 
     def test_combining_heretical2nfd(self):
-        s = '\u03b7\u0345\u0342\u0313'  # ᾖ in heretical combining order
-        n = normalize_unicode(s, target='NFD')
-        assert_not_equal(s, n)
-        g = '\u03b7\u0313\u0342\u0345'  # ᾖ in NFD
-        assert_equal(g, n)
+        raise NotImplementedError
 
     @raises(ValueError)
     def test_combining_heretical2nfd_compatible(self):
-        s = '\u03b7\u0345\u0342\u0313'  # ᾖ in heretical combining order
-        normalize_unicode(s, target='NFD', check_compatible=True)
+        raise NotImplementedError
