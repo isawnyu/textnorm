@@ -7,7 +7,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 setup(
     name='textnorm',
-    version='0.2',
+    version='0.3',
     description=(
         'A simple package for normalizing whitespace and Unicode composition '
         'forms in Python 3 strings'),
