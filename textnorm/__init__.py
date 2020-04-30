@@ -13,7 +13,7 @@ __version__ = '0.3'
 import unicodedata
 
 
-def normalize_space(v: str, preserve: list=[]):
+def normalize_space(v: str, preserve: list = [], trim: bool = True):
     """Normalize space in a Unicode string.
 
     Keyword arguments:
@@ -21,6 +21,9 @@ def normalize_space(v: str, preserve: list=[]):
      * v: the Unicode string to normalize
      * preserve: a list of Unicode character strings to preserve instead of
                  treating them as whitespace (see tests for examples)
+     * trim: if True (default), strips whitespace at beginning and end of
+                 string; if False, collapses whitespace at beginning and end
+                 according to regular algorithm + preserve settings.
 
     Returns the normalized Unicode string.
 
