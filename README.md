@@ -6,7 +6,7 @@ The package provides two functions, as follows. Extended use examples may be fou
 
 ## normalize_space
 
-This function takes a Python 3 string argument (```v```) and returns a Python string in which each continuous sequence of one or more whitespace characters found in ```v``` has been collapsed into a single whitespace character. Whitespace characters at the beginning and end of ```v``` are eliminated entirely. 
+This function takes a Python 3 string argument (```v```) and returns a Python string in which each continuous sequence of one or more whitespace characters found in ```v``` has been collapsed into a single whitespace character. 
 
 Basic usage is as simple as:
 
@@ -23,7 +23,7 @@ which produces output like:
 "There was an Old Man in a tree,"
 ```
 
-By default, newline characters (```\n```) are treated as any other whitespace character, such that use like this:
+By default, characters like newlines (```\n```) are treated as any other whitespace character, such that use like this:
 
 ```python
 s = """I’m now arrived—thanks to the gods!—  
@@ -52,6 +52,46 @@ which produces:
 Thro’ pathways rough and muddy,
 A certain sign that makin roads
 Is no this people’s study:"
+```
+
+Another optional keyword argument (```trim```) can be used to adjust handling of whitespace appearing at the beginning and end of the input string. Leading and trailing characters indicated in the ```preserve``` argument are always protected, but otherwise ```trim=True``` (the default) ensures a result with no leading or trailing whitespace. If the input string has leading or trailing whitespace and ```trim``` is set to ```False```, then the result string will have either a single space character corresponding to the original leading/trailing whitespace characters **or** a sequence of preserved whitespace characters copied from the original. For examples:
+
+```python
+s = '\t\n orange '
+print('"{}"'.format(normalize_space(s, trim=False)))
+```
+
+produces
+
+```python
+" orange "
+```
+
+and 
+
+```python
+s = '\t\n orange '
+print('"{}"'.format(normalize_space(s, preserve=['\n'], trim=False)))
+```
+
+produces 
+
+```python
+"
+orange "
+```
+
+but
+
+```python
+s = '\t\n orange '
+print('"{}"'.format(normalize_space(s, trim=True)))  # default
+```
+
+produces
+
+```python
+"orange"
 ```
 
 ## normalize_unicode

@@ -5,9 +5,12 @@ __copyright__ = 'Copyright ©️ 2017 New York University'
 __license__ = 'See LICENSE.txt'
 __version__ = '0.3'
 
+import logging
 from nose.tools import assert_equal, assert_not_equal, raises
 from textnorm import normalize_space, normalize_unicode
 import unittest
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 class SpaceTests(unittest.TestCase):
@@ -33,6 +36,30 @@ class SpaceTests(unittest.TestCase):
         n = normalize_space(s)
         assert_equal(
            'The quick brown fox jumped over the lazy sea urchin.', n)
+
+    def test_trim_false(self):
+        s = '  The quick brown fox jumped over the lazy sea urchin. '
+        n = normalize_space(s, trim=False)
+        assert_equal(
+           ' The quick brown fox jumped over the lazy sea urchin. ', n)
+
+    def test_trim_false_complex(self):
+        s = '  \n     The quick brown fox jumped over the lazy sea urchin.\t'
+        n = normalize_space(s, trim=False)
+        assert_equal(
+           ' The quick brown fox jumped over the lazy sea urchin. ', n)
+
+    def test_trim_false_complex_preserve(self):
+        s = '  \n     The quick brown fox jumped over the lazy sea urchin.\t'
+        n = normalize_space(s, preserve=['\n'], trim=False)
+        assert_equal(
+           '\nThe quick brown fox jumped over the lazy sea urchin. ', n)
+
+    def test_trim_false_complex_preserve_bis(self):
+        s = '  \n \t  \t   The quick brown fox jumped over the lazy sea urchin. \t \t    '
+        n = normalize_space(s, preserve=['\n'], trim=False)
+        assert_equal(
+           '\nThe quick brown fox jumped over the lazy sea urchin. ', n)
 
     def test_interstitial(self):
         s = '  The quick   brown fox jumped over    the lazy sea urchin. '
@@ -95,6 +122,7 @@ class SpaceTests(unittest.TestCase):
         n = normalize_space(s, preserve=['\t', '\n', '\u00A0'])
         assert_equal(g, n)
 
+        
 
 class UnicodeTests(unittest.TestCase):
 

@@ -10,10 +10,12 @@ __copyright__ = 'Copyright ©️ 2017 New York University'
 __license__ = 'See LICENSE.txt'
 __version__ = '0.3'
 
+import logging
+import sys
 import unicodedata
 
 
-def normalize_space(v: str, preserve: list=[]):
+def normalize_space(v: str, preserve: list = [], trim: bool = True):
     """Normalize space in a Unicode string.
 
     Keyword arguments:
@@ -21,15 +23,23 @@ def normalize_space(v: str, preserve: list=[]):
      * v: the Unicode string to normalize
      * preserve: a list of Unicode character strings to preserve instead of
                  treating them as whitespace (see tests for examples)
+     * trim: if True (default), strips whitespace at beginning and end of
+                 string; if False, collapses whitespace at beginning and end
+                 according to regular algorithm + preserve settings.
 
     Returns the normalized Unicode string.
 
     The function collapses all continuous runs of whitespace into a single
-    whitespace character and leading and trailing spaces are trimmed away.
-    If one or more characters are found in the "preserve" list, these are
-    maintained in the output; however, other adjoining whitespace characters
-    are still eliminated.
+    whitespace character unless one or more characters are found in the
+    "preserve" list. Characters found in the "preserve" list are maintained in
+    the output; however, other adjoining whitespace characters are still
+    eliminated. If "trim" is True, leading/trailing whitespace is eliminated
+    entirely, otherwise these is treated the same as other whitespace
+    substrings.
     """
+    
+    logger = logging.getLogger(sys._getframe().f_code.co_name)
+
     if len(preserve) == 0:
         s = ' '.join(v.split())
     else:
@@ -38,6 +48,20 @@ def normalize_space(v: str, preserve: list=[]):
         for chunk in v.split(token):
             normed.append(normalize_space(chunk, preserve[1:]))
         s = token.join(normed)
+    if not trim:
+        if v != s:
+            first = ''
+            last = ''
+            chunks = v.split()
+            vi = v.index(chunks[0])
+            si = s.index(chunks[0])
+            if si == 0 and v[0] != s[0]:
+                first = ' '
+            vi = v.index(chunks[-1]) + len(chunks[-1])
+            si = s.index(chunks[-1]) + len(chunks[-1])
+            if si == len(s) and len(v) > vi:
+                last = ' '
+            s = first + s + last
     return s
 
 
