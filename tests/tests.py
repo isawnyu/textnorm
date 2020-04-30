@@ -34,6 +34,12 @@ class SpaceTests(unittest.TestCase):
         assert_equal(
            'The quick brown fox jumped over the lazy sea urchin.', n)
 
+    def test_trim_false(self):
+        s = '  The quick brown fox jumped over the lazy sea urchin. '
+        n = normalize_space(s, trim=False)
+        assert_equal(
+           ' The quick brown fox jumped over the lazy sea urchin. ', n)
+
     def test_interstitial(self):
         s = '  The quick   brown fox jumped over    the lazy sea urchin. '
         n = normalize_space(s)
@@ -95,6 +101,7 @@ class SpaceTests(unittest.TestCase):
         n = normalize_space(s, preserve=['\t', '\n', '\u00A0'])
         assert_equal(g, n)
 
+        
 
 class UnicodeTests(unittest.TestCase):
 
