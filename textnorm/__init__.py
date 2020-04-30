@@ -10,6 +10,8 @@ __copyright__ = 'Copyright ©️ 2017 New York University'
 __license__ = 'See LICENSE.txt'
 __version__ = '0.3'
 
+import logging
+import sys
 import unicodedata
 
 
@@ -35,6 +37,8 @@ def normalize_space(v: str, preserve: list = [], trim: bool = True):
     entirely, otherwise these is treated the same as other whitespace
     substrings.
     """
+    
+    logger = logging.getLogger(sys._getframe().f_code.co_name)
 
     if len(preserve) == 0:
         s = ' '.join(v.split())
@@ -49,16 +53,14 @@ def normalize_space(v: str, preserve: list = [], trim: bool = True):
             first = ''
             last = ''
             chunks = v.split()
-            i = v.index(chunks[0])
-            if i > 0:
-                first = normalize_space(v[0:i], preserve)
-                if first == '':
-                    first = ' '
-            i = v.index(chunks[-1])
-            if i + len(chunks[-1]) < len(v):
-                last = normalize_space(v[i+len(chunks[-1]):], preserve)
-                if last == '':
-                    last = ' '
+            vi = v.index(chunks[0])
+            si = s.index(chunks[0])
+            if si == 0 and v[0] != s[0]:
+                first = ' '
+            vi = v.index(chunks[-1]) + len(chunks[-1])
+            si = s.index(chunks[-1]) + len(chunks[-1])
+            if si == len(s) and len(v) > vi:
+                last = ' '
             s = first + s + last
     return s
 
