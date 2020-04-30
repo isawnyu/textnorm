@@ -28,11 +28,14 @@ def normalize_space(v: str, preserve: list = [], trim: bool = True):
     Returns the normalized Unicode string.
 
     The function collapses all continuous runs of whitespace into a single
-    whitespace character and leading and trailing spaces are trimmed away.
-    If one or more characters are found in the "preserve" list, these are
-    maintained in the output; however, other adjoining whitespace characters
-    are still eliminated.
+    whitespace character unless one or more characters are found in the
+    "preserve" list. Characters found in the "preserve" list are maintained in
+    the output; however, other adjoining whitespace characters are still
+    eliminated. If "trim" is True, leading/trailing whitespace is eliminated
+    entirely, otherwise these is treated the same as other whitespace
+    substrings.
     """
+
     if len(preserve) == 0:
         s = ' '.join(v.split())
     else:
@@ -41,6 +44,22 @@ def normalize_space(v: str, preserve: list = [], trim: bool = True):
         for chunk in v.split(token):
             normed.append(normalize_space(chunk, preserve[1:]))
         s = token.join(normed)
+    if not trim:
+        if v != s:
+            first = ''
+            last = ''
+            chunks = v.split()
+            i = v.index(chunks[0])
+            if i > 0:
+                first = normalize_space(v[0:i], preserve)
+                if first == '':
+                    first = ' '
+            i = v.index(chunks[-1])
+            if i + len(chunks[-1]) < len(v):
+                last = normalize_space(v[i+len(chunks[-1]):], preserve)
+                if last == '':
+                    last = ' '
+            s = first + s + last
     return s
 
 
