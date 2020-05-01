@@ -18,12 +18,12 @@ setup(
     license='LICENSE.txt',
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Topic :: Text Processing :: General',
         'License :: License :: OSI Approved :: GNU Affero General Public '
             'License v3',
-        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3 :: Only'
     ],
     keywords=(
