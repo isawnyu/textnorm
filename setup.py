@@ -12,6 +12,7 @@ setup(
         'A simple package for normalizing whitespace and Unicode composition '
         'forms in Python 3 strings'),
     long_description=long_description,
+    long_description_content_type='text/markdown',
     url='https://github.com/isawnyu/textnorm',
     author='Tom Elliott',
     author_email='tom.elliott@nyu.edu',
@@ -21,7 +22,7 @@ setup(
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Topic :: Text Processing :: General',
-        'License :: License :: OSI Approved :: GNU Affero General Public '
+        'License :: OSI Approved :: GNU Affero General Public '
             'License v3',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3 :: Only'
