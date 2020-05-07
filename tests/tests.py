@@ -43,6 +43,11 @@ class SpaceTests(unittest.TestCase):
         assert_equal(
            ' The quick brown fox jumped over the lazy sea urchin. ', n)
 
+    def test_trim_false_tail(self):
+        s = 'This file is '
+        n = normalize_space(s, trim=False)
+        assert_equal('This file is ', n)
+
     def test_trim_false_complex(self):
         s = '  \n     The quick brown fox jumped over the lazy sea urchin.\t'
         n = normalize_space(s, trim=False)

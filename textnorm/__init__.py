@@ -39,7 +39,7 @@ def normalize_space(v: str, preserve: list = [], trim: bool = True):
     """
     
     logger = logging.getLogger(sys._getframe().f_code.co_name)
-
+    logger.debug('v: {}'.format(repr(v)))
     if len(preserve) == 0:
         s = ' '.join(v.split())
     else:
@@ -48,17 +48,21 @@ def normalize_space(v: str, preserve: list = [], trim: bool = True):
         for chunk in v.split(token):
             normed.append(normalize_space(chunk, preserve[1:]))
         s = token.join(normed)
+    logger.debug('s: {}'.format(repr(s)))
     if not trim:
         if v != s:
             first = ''
             last = ''
             chunks = v.split()
+            logger.debug('chunks: {}'.format(repr(chunks)))
             vi = v.index(chunks[0])
             si = s.index(chunks[0])
             if si == 0 and v[0] != s[0]:
                 first = ' '
-            vi = v.index(chunks[-1]) + len(chunks[-1])
-            si = s.index(chunks[-1]) + len(chunks[-1])
+            vi = v.rindex(chunks[-1]) + len(chunks[-1])
+            si = s.rindex(chunks[-1]) + len(chunks[-1])
+            logger.debug('vi: {}'.format(repr(vi)))
+            logger.debug('si: {}'.format(repr(si)))
             if si == len(s) and len(v) > vi:
                 last = ' '
             s = first + s + last
